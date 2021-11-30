@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="author" content="株式会社のばらネットワークス" />
+	<title>Bookmarklet Publisher</title>
+	<style>
+		body,
+		div,
+		p,
+		h1,
+		h2,
+		dl,
+		ul {
+			margin: 0;
+			padding: 0;
+		}
+
+		header {
+			padding: 4px;
+			background-color: #EEE;
+		}
+
+		footer {
+			padding: 4px;
+			background-color: #EEE;
+			text-align: center;
+		}
+
+		#bookmarklets{
+			padding: 8px;
+		}
+	</style>
+</head>
+
+<body>
+	<header>
+		<h1>Bookmarklet Publisher</h1>
+		<div>Drag & Drop following hyperlink into your bookmark bar on browser.</div>
+	</header>
+	<main>
+		<div id="bookmarklets">
+		</div>
+	</main>
+	<footer>
+		<div>Copyright Nobara Networks. All Rights Reserved.</div>
+	</footer>
+	<script>
+		// .bookmarkletsにブックマークレットの一覧を表示する
+		function createBookmarklets(json, area) {
+			// jsファイルを読み込みその内容をワンライナーにしてブックマークレットのhref内容にする
+			function setHyperLink(url, a) {
+				fetch(url)
+					.then(res => res.ok ? res.text() : !function () { throw res.status + '(' + res.statusText + '), url(' + url + ')' }())
+					.then(txt => { a.setAttribute('href', 'javascript:' + txt.replace(/[\n\r\t]/g, '')); })
+					.catch(e => console.error('fetch::Error (' + e + ')'));
+			}
+
+			// dtに名前と処理, ddに日付とメモをセットする
+			var dl = document.createElement('dl');
+			for (var i = 0; i < json.bookmarklets.length; i++) {
+				var dt = document.createElement('dt');
+				var a = document.createElement('a');
+				a.innerText = json.bookmarklets[i].name;
+				dt.append(a);
+				setHyperLink(json.bookmarklets[i].file, a);
+				dl.append(dt);
+				var dd = document.createElement('dd');
+				dd.innerHTML = json.bookmarklets[i].moddate + ' ' + json.bookmarklets[i].note;
+				dl.append(dd);
+			}
+			area.append(dl);
+		}
+
+		// 設定ファイルを読み込んでブックマークレット一覧を作る
+		var area = document.getElementById('bookmarklets');
+		fetch('./bookmarklets.json')
+			.then(res => res.json())
+			.then(j => createBookmarklets(j, area))
+			.catch(e => console.error('fetch::Error (' + e + ')'));
+	</script>
+</body>
+
+</html>

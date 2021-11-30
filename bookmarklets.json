@@ -1,0 +1,21 @@
+{
+	"name": "bookmarklets.json",
+	"bookmarklets": [
+		{
+			"class": "",
+			"name": "PreviewInMultiWidth",
+			"file": "./bookmarklets/PreviewInMultiWidth/PreviewInMultiWidth.js",
+			"note": "Preview pages of various widths in other window.",
+			"pubdate": "2021/11/25",
+			"moddate": "2021/11/25"
+		},
+		{
+			"class": "Sample",
+			"name": "Sample Alert",
+			"file": "./bookmarklets/sample/sample.js",
+			"note": "sample bookmarklet",
+			"pubdate": "2021/11/24",
+			"moddate": "2021/11/24"
+		}
+	]
+}
